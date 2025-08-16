@@ -1,33 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>tirosen</title>
+  <!-- Google Fonts Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: white;
-      color: black;
-      font-family: 'Helvetica Neue', sans-serif;
+    :root{
+      --bg-top:#0b0e13;
+      --bg:#0f1115;
+      --fg:#d0d4da;
+      --muted:#9aa4b2;
+      --subtle:#7f8790;
+      --glow:#d0d4da;
     }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
+    body{
+      margin:0; background:linear-gradient(180deg,var(--bg-top),var(--bg)); color:var(--fg);
+      display:flex; flex-direction:column; min-height:100vh; font-family:'Poppins',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      position:relative;
     }
-    h1 {
-      font-size: 8rem;
-      font-weight: 400;
-      letter-spacing: 2px;
+    
+    .glow-layer{position:fixed; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.6;
+      background:
+        radial-gradient(600px 320px at 120px 90px, rgba(255,255,255,.085), transparent 60%),
+        radial-gradient(520px 260px at 50% calc(100% - 24px), rgba(255,255,255,.06), transparent 60%);
+    }
+
+    header{ font-size:40px; font-weight:700; letter-spacing:.04em; padding:40px 60px; position:absolute; top:0; left:0; }
+    main{ flex:1; display:flex; align-items:center; justify-content:center; text-align:center; font-size:48px; font-weight:300; line-height:1.6; letter-spacing:0; text-transform:capitalize; padding:0 20px; }
+    footer{ text-align:center; font-size:13px; color:var(--subtle); padding:20px 0; }
+
+    .glow-text{ text-shadow:
+        0 0 10px color-mix(in oklab, var(--glow), transparent 75%),
+        0 0 28px color-mix(in oklab, var(--glow), transparent 85%);
+    }
+
+    /* Mobile */
+    @media (max-width: 600px){
+      header{ font-size:24px; padding:24px 28px; }
+      main{ font-size:28px; line-height:1.6; }
+      footer{ font-size:11px; padding:16px 0; }
+      .glow-layer{ background:
+        radial-gradient(380px 220px at 110px 70px, rgba(255,255,255,.085), transparent 60%),
+        radial-gradient(360px 200px at 50% calc(100% - 20px), rgba(255,255,255,.06), transparent 60%);
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>tirosen</h1>
-  </div>
+  <div class="glow-layer" aria-hidden="true"></div>
+
+  <header class="glow-text">tirosen</header>
+  <main>
+    <div>
+      Passion,<br/>
+      Venture,<br/>
+      Vision.
+    </div>
+  </main>
+  <footer class="glow-text">Tokyo</footer>
 </body>
 </html>
