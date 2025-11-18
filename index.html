@@ -29,13 +29,18 @@
     .page {
       max-width: 920px;
       margin: 0 auto;
-      padding: 56px 20px 80px;
+      padding: 56px 20px 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
+      gap: 16px;
+      padding: 48px 0 20px;
       margin-bottom: 60px;
     }
 
@@ -44,6 +49,37 @@
       font-weight: 700;
       letter-spacing: 0.16em;
       text-transform: lowercase;
+    }
+
+    .header-tagline {
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-align: center;
+      justify-self: center;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 6px;
+      justify-self: flex-end;
+    }
+
+    .lang-switch button {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .lang-switch button:hover {
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .hero {
@@ -61,9 +97,33 @@
       font-size: clamp(36px, 6vw, 54px);
       line-height: 1.1;
       margin: 0 0 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .hero h1 span {
+      display: block;
+    }
+
+    body[data-lang="zh"] #hero-part-2 {
+      width: 100%;
+      flex-basis: 100%;
+      display: block;
+    }
+
+    body[data-lang="ja"] #hero-part-2,
+    body[data-lang="ja"] #hero-part-3 {
+      white-space: nowrap;
+    }
+
+    .hero h1 .highlight {
       color: var(--accent);
     }
 
@@ -212,12 +272,94 @@
       text-align: center;
       font-size: 13px;
       color: var(--muted);
+      margin-top: auto;
     }
 
-    footer .footer-main {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 8px;
+    @media (max-width: 600px) {
+      header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 4px;
+        padding: 16px 0 4px;
+        margin-bottom: 18px;
+      }
+
+      .header-tagline {
+        font-size: 13px;
+        line-height: 1.4;
+        max-width: 220px;
+        margin: 6px auto 0;
+      }
+
+      .lang-switch {
+        justify-content: center;
+        margin-top: 6px;
+      }
+
+      .hero {
+        padding: 24px 18px;
+        margin-bottom: 24px;
+      }
+
+      .hero-top {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(120px, 150px);
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .hero-top h1 {
+        margin: 0;
+      }
+
+      .hero-top .sub-principles {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .hero-top .sub-principles span {
+        width: auto;
+        text-align: left;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      body[data-lang="ja"] .hero-top,
+      body[data-lang="zh"] .hero-top,
+      body[data-lang="en"] .hero-top {
+        grid-template-columns: minmax(0, 1fr) minmax(140px, 190px);
+        gap: 16px;
+      }
+
+      body[data-lang="ja"] .hero-top .sub-principles,
+      body[data-lang="zh"] .hero-top .sub-principles,
+      body[data-lang="en"] .hero-top .sub-principles {
+        align-items: flex-end;
+      }
+
+      body[data-lang="ja"] .hero-top .sub-principles span,
+      body[data-lang="zh"] .hero-top .sub-principles span,
+      body[data-lang="en"] .hero-top .sub-principles span {
+        text-align: right;
+      }
+
+      .hero h1 {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px 6px;
+      }
+
+      .hero h1 span {
+        display: inline;
+        line-height: 1.05;
+      }
+
+      #hero-part-3 {
+        width: 100%;
+        display: block;
+      }
     }
   </style>
 </head>
@@ -225,22 +367,21 @@
   <div class="page">
     <header>
       <div class="logo">tirosen</div>
-      <div>#Dream. Dare. Disrupt.</div>
+      <div class="header-tagline" id="tagline">#Dream. Dare. Disrupt.</div>
+      <div class="lang-switch" id="lang-switch"></div>
     </header>
 
     <section class="hero">
       <div>
-        <h1>Passion. <span>Venture.</span> Vision.</h1>
-        <p class="sub">
-          tirosen is an investment philosophy:<br>
-          time, patience, discipline, and letting compounding speak for itself.
-        </p>
-        <div class="sub-principles">
-          <span>Time</span>
-          <span>Patience</span>
-          <span>Discipline</span>
-          <span>Compounding</span>
+        <div class="hero-top">
+          <h1>
+            <span id="hero-part-1">Passion,</span>
+            <span class="highlight" id="hero-part-2">Venture,</span>
+            <span id="hero-part-3">Vision.</span>
+          </h1>
+          <div class="sub-principles" id="principles"></div>
         </div>
+        <p class="sub" id="subcopy"></p>
       </div>
       <div class="terminal">
         <div class="terminal-header">
@@ -251,28 +392,175 @@
         </div>
         <div class="terminal-body">
           <div class="cmd">
-            <div class="cmd-title"><span class="prompt">tirosen@root:~$</span> echo "Passion"</div>
-            <p>→ Passion to study how companies grow.</p>
+            <div class="cmd-title">
+              <span class="prompt">tirosen@root:~$</span>
+              <span id="cmd-echo-passion">echo "Passion"</span>
+            </div>
+            <p id="cmd-text-passion">→ Passion sharpens builders.</p>
           </div>
           <div class="cmd">
-            <div class="cmd-title"><span class="prompt">tirosen@root:~$</span> echo "Venture"</div>
-            <p>→ Venture into uncertainty with clarity.</p>
+            <div class="cmd-title">
+              <span class="prompt">tirosen@root:~$</span>
+              <span id="cmd-echo-venture">echo "Venture"</span>
+            </div>
+            <p id="cmd-text-venture">→ Venture into uncertainty with clarity.</p>
           </div>
           <div class="cmd">
-            <div class="cmd-title"><span class="prompt">tirosen@root:~$</span> echo "Vision"</div>
-            <p>→ Vision for what a business can become.</p>
+            <div class="cmd-title">
+              <span class="prompt">tirosen@root:~$</span>
+              <span id="cmd-echo-vision">echo "Vision"</span>
+            </div>
+            <p id="cmd-text-vision">→ Vision for what a business can become.</p>
           </div>
         </div>
       </div>
     </section>
 
     <footer>
-      <div>© <span id="year"></span> Tokyo</div>
+      <div>© <span id="year"></span> <span id="footer-location">Tokyo</span></div>
     </footer>
   </div>
 
   <script>
+    const languageContent = {
+      en: {
+        label: "EN",
+        langAttr: "en",
+        tagline: "#Dream. Dare. Disrupt.",
+        hero: ["Passion,", "Venture,", "Vision."],
+        description: "",
+        principles: ["Time", "Patience", "Discipline", "Compounding"],
+        commands: {
+          passion: {
+            echo: 'echo "Passion"',
+            text: "→ Passion sharpens builders."
+          },
+          venture: {
+            echo: 'echo "Venture"',
+            text: "→ Venture into uncertainty with clarity."
+          },
+          vision: {
+            echo: 'echo "Vision"',
+            text: "→ Vision for what a business can become."
+          }
+        },
+        footer: "Tokyo"
+      },
+      ja: {
+        label: "日",
+        langAttr: "ja",
+        tagline: "#夢見て。挑戦し。変革する。",
+        hero: ["情熱、", "ベンチャー、", "ビジョン。"],
+        description: "",
+        principles: ["時間", "忍耐", "規律", "複利"],
+        commands: {
+          passion: {
+            echo: 'echo "情熱"',
+            text: "→ 情熱がものづくりを磨く。"
+          },
+          venture: {
+            echo: 'echo "ベンチャー"',
+            text: "→ 不確実性へ明瞭さをもって踏み出すベンチャー精神。"
+          },
+          vision: {
+            echo: 'echo "ビジョン"',
+            text: "→ ビジネスの未来像を描く視座。"
+          }
+        },
+        footer: "東京"
+      },
+      zh: {
+        label: "中",
+        langAttr: "zh-Hant",
+        tagline: "#夢想．挑戰．顛覆。",
+        hero: ["熱情，", "冒險，", "遠見。"],
+        description: "",
+        principles: ["時間", "耐心", "紀律", "複利"],
+        commands: {
+          passion: {
+            echo: 'echo "熱情"',
+            text: "→ 熱情讓人做得更好。"
+          },
+          venture: {
+            echo: 'echo "冒險"',
+            text: "→ 以清晰的思路面對不確定性。"
+          },
+          vision: {
+            echo: 'echo "遠見"',
+            text: "→ 以遠見構想企業未來。"
+          }
+        },
+        footer: "東京"
+      }
+    };
+
+    const elements = {
+      tagline: document.getElementById("tagline"),
+      heroParts: [
+        document.getElementById("hero-part-1"),
+        document.getElementById("hero-part-2"),
+        document.getElementById("hero-part-3")
+      ],
+      subcopy: document.getElementById("subcopy"),
+      principles: document.getElementById("principles"),
+      cmdEchoPassion: document.getElementById("cmd-echo-passion"),
+      cmdEchoVenture: document.getElementById("cmd-echo-venture"),
+      cmdEchoVision: document.getElementById("cmd-echo-vision"),
+      cmdTextPassion: document.getElementById("cmd-text-passion"),
+      cmdTextVenture: document.getElementById("cmd-text-venture"),
+      cmdTextVision: document.getElementById("cmd-text-vision"),
+      footerLocation: document.getElementById("footer-location"),
+      langSwitch: document.getElementById("lang-switch")
+    };
+
+    const languageOrder = Object.keys(languageContent);
+    let currentLanguage = "en";
+
+    function renderPrinciples(list) {
+      elements.principles.innerHTML = "";
+      list.forEach((item) => {
+        const span = document.createElement("span");
+        span.textContent = item;
+        elements.principles.appendChild(span);
+      });
+    }
+
+    function updateLanguageButtons() {
+      elements.langSwitch.innerHTML = "";
+      languageOrder
+        .filter((lang) => lang !== currentLanguage)
+        .forEach((lang) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = languageContent[lang].label;
+          button.addEventListener("click", () => setLanguage(lang));
+          elements.langSwitch.appendChild(button);
+        });
+    }
+
+    function setLanguage(lang) {
+      const data = languageContent[lang];
+      currentLanguage = lang;
+      document.documentElement.lang = data.langAttr;
+      elements.tagline.textContent = data.tagline;
+      elements.heroParts.forEach((node, index) => {
+        node.textContent = data.hero[index];
+      });
+      elements.subcopy.innerHTML = data.description;
+      renderPrinciples(data.principles);
+      elements.cmdEchoPassion.textContent = data.commands.passion.echo;
+      elements.cmdEchoVenture.textContent = data.commands.venture.echo;
+      elements.cmdEchoVision.textContent = data.commands.vision.echo;
+      elements.cmdTextPassion.textContent = data.commands.passion.text;
+      elements.cmdTextVenture.textContent = data.commands.venture.text;
+      elements.cmdTextVision.textContent = data.commands.vision.text;
+      elements.footerLocation.textContent = data.footer;
+      document.body.dataset.lang = lang;
+      updateLanguageButtons();
+    }
+
     document.getElementById("year").textContent = new Date().getFullYear();
+    setLanguage(currentLanguage);
   </script>
 </body>
 </html>
