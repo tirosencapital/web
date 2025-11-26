@@ -75,11 +75,13 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.2s, color 0.2s, transform 0.16s ease-out, box-shadow 0.16s ease-out;
     }
 
     .lang-switch button:hover {
       background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
     }
 
     .hero {
@@ -91,6 +93,24 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(74, 222, 128, 0.32), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(96, 165, 250, 0.22), transparent 55%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .hero:hover::before {
+      opacity: 0.25;
     }
 
     .hero h1 {
@@ -148,6 +168,21 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
+      background: rgba(15, 17, 21, 0.9);
+      transition:
+        background 0.18s ease-out,
+        color 0.18s ease-out,
+        border-color 0.18s ease-out,
+        transform 0.18s ease-out,
+        box-shadow 0.18s ease-out;
+    }
+
+    .sub-principles span:hover {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: rgba(74, 222, 128, 0.55);
+      color: #e5fff2;
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
     }
 
     .terminal {
@@ -163,6 +198,14 @@
       min-height: 100%;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+      transition: transform 0.22s ease-out, box-shadow 0.22s ease-out, border-color 0.22s ease-out;
+    }
+
+    .terminal:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.85);
+      border-color: rgba(74, 222, 128, 0.45);
     }
 
     .terminal::before {
@@ -210,10 +253,32 @@
     .cmd {
       padding: 14px 0;
       border-top: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      transition: background 0.18s ease-out, transform 0.18s ease-out, box-shadow 0.18s ease-out;
     }
 
     .cmd:first-child {
       border-top: none;
+    }
+
+    .cmd::before {
+      content: "";
+      position: absolute;
+      inset: -2px -10px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 0 0, rgba(74, 222, 128, 0.16), transparent 55%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease-out;
+    }
+
+    .cmd:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.7);
+    }
+
+    .cmd:hover::before {
+      opacity: 1;
     }
 
     .prompt {
@@ -223,6 +288,10 @@
 
     .cmd-title {
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
     }
 
     .cmd p {
@@ -230,6 +299,7 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
+      transition: opacity 0.35s ease-out, transform 0.35s ease-out;
     }
 
     .pillars {
@@ -273,6 +343,45 @@
       font-size: 13px;
       color: var(--muted);
       margin-top: auto;
+    }
+
+    /* 進場淡入動畫 */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeUp 0.7s ease-out forwards;
+    }
+
+    .delay-1 {
+      animation-delay: 0.12s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.24s;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 終端機打字 cursor */
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1.1em;
+      margin-left: 3px;
+      background: rgba(250, 250, 250, 0.9);
+      border-radius: 1px;
+      animation: blink 0.9s steps(2, start) infinite;
+      vertical-align: text-bottom;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
     }
 
     @media (max-width: 600px) {
@@ -365,13 +474,13 @@
 </head>
 <body>
   <div class="page">
-    <header>
+    <header class="fade-in-up">
       <div class="logo">tirosen</div>
       <div class="header-tagline" id="tagline">#Dream. Dare. Disrupt.</div>
       <div class="lang-switch" id="lang-switch"></div>
     </header>
 
-    <section class="hero">
+    <section class="hero fade-in-up delay-1">
       <div>
         <div class="hero-top">
           <h1>
@@ -395,6 +504,7 @@
             <div class="cmd-title">
               <span class="prompt">tirosen@root:~$</span>
               <span id="cmd-echo-passion">echo "Passion"</span>
+              <span class="cursor" id="cursor-passion" style="display:none;"></span>
             </div>
             <p id="cmd-text-passion">→ Passion sharpens builders.</p>
           </div>
@@ -402,6 +512,7 @@
             <div class="cmd-title">
               <span class="prompt">tirosen@root:~$</span>
               <span id="cmd-echo-venture">echo "Venture"</span>
+              <span class="cursor" id="cursor-venture" style="display:none;"></span>
             </div>
             <p id="cmd-text-venture">→ Venture into uncertainty with clarity.</p>
           </div>
@@ -409,6 +520,7 @@
             <div class="cmd-title">
               <span class="prompt">tirosen@root:~$</span>
               <span id="cmd-echo-vision">echo "Vision"</span>
+              <span class="cursor" id="cursor-vision" style="display:none;"></span>
             </div>
             <p id="cmd-text-vision">→ Vision for what a business can become.</p>
           </div>
@@ -416,7 +528,7 @@
       </div>
     </section>
 
-    <footer>
+    <footer class="fade-in-up delay-2">
       <div>© <span id="year"></span> <span id="footer-location">Tokyo</span></div>
     </footer>
   </div>
@@ -510,12 +622,97 @@
       cmdTextVenture: document.getElementById("cmd-text-venture"),
       cmdTextVision: document.getElementById("cmd-text-vision"),
       footerLocation: document.getElementById("footer-location"),
-      langSwitch: document.getElementById("lang-switch")
+      langSwitch: document.getElementById("lang-switch"),
+      cursorPassion: document.getElementById("cursor-passion"),
+      cursorVenture: document.getElementById("cursor-venture"),
+      cursorVision: document.getElementById("cursor-vision")
     };
 
     const languageOrder = Object.keys(languageContent);
     let currentLanguage = "en";
 
+    // --- 終端機打字動畫 ---
+    let typingTimeouts = [];
+
+    function clearTyping() {
+      typingTimeouts.forEach((t) => clearTimeout(t));
+      typingTimeouts = [];
+    }
+
+    function typeLine(el, fullText, startDelay, done) {
+      el.textContent = "";
+      for (let i = 0; i <= fullText.length; i++) {
+        const timeout = setTimeout(() => {
+          el.textContent = fullText.slice(0, i);
+          if (i === fullText.length && typeof done === "function") {
+            done();
+          }
+        }, startDelay + i * 45);
+        typingTimeouts.push(timeout);
+      }
+    }
+
+    function animateTerminal() {
+      clearTyping();
+
+      const {
+        cmdEchoPassion,
+        cmdEchoVenture,
+        cmdEchoVision,
+        cmdTextPassion,
+        cmdTextVenture,
+        cmdTextVision,
+        cursorPassion,
+        cursorVenture,
+        cursorVision
+      } = elements;
+
+      const commands = [
+        { el: cmdEchoPassion, cursor: cursorPassion, textEl: cmdTextPassion },
+        { el: cmdEchoVenture, cursor: cursorVenture, textEl: cmdTextVenture },
+        { el: cmdEchoVision, cursor: cursorVision, textEl: cmdTextVision }
+      ];
+
+      // 把說明文字先隱藏，之後再淡入
+      commands.forEach(({ textEl }) => {
+        textEl.style.opacity = 0;
+        textEl.style.transform = "translateY(4px)";
+      });
+
+      const fullTexts = commands.map(({ el }) => el.textContent);
+
+      // 依序顯示三行 command
+      const startDelayBase = 220;
+
+      // Passion
+      cursorPassion.style.display = "inline-block";
+      cursorVenture.style.display = "none";
+      cursorVision.style.display = "none";
+
+      typeLine(commands[0].el, fullTexts[0], startDelayBase, () => {
+        commands[0].textEl.style.opacity = 1;
+        commands[0].textEl.style.transform = "translateY(0)";
+        cursorPassion.style.display = "none";
+        cursorVenture.style.display = "inline-block";
+
+        // Venture
+        typeLine(commands[1].el, fullTexts[1], 180, () => {
+          commands[1].textEl.style.opacity = 1;
+          commands[1].textEl.style.transform = "translateY(0)";
+          cursorVenture.style.display = "none";
+          cursorVision.style.display = "inline-block";
+
+          // Vision
+          typeLine(commands[2].el, fullTexts[2], 180, () => {
+            commands[2].textEl.style.opacity = 1;
+            commands[2].textEl.style.transform = "translateY(0)";
+            cursorVision.style.display = "none";
+          });
+        });
+      });
+    }
+
+    // --- 語言切換邏輯 ---
     function renderPrinciples(list) {
       elements.principles.innerHTML = "";
       list.forEach((item) => {
@@ -557,6 +754,9 @@
       elements.footerLocation.textContent = data.footer;
       document.body.dataset.lang = lang;
       updateLanguageButtons();
+
+      // 每次切語言時，重新跑一次終端機打字動畫
+      setTimeout(animateTerminal, 250);
     }
 
     document.getElementById("year").textContent = new Date().getFullYear();
