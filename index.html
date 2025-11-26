@@ -185,6 +185,78 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
     }
 
+    /* 英文版：縮小標籤尺寸，桌面保持單行，手機可換行 */
+    body[data-lang="en"] .sub-principles {
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-bottom: 0;
+    }
+
+    body[data-lang="en"] .sub-principles span {
+      padding: 6px 10px;
+      font-size: 12px;
+      letter-spacing: 0.07em;
+    }
+
+    @media (min-width: 720px) {
+      body[data-lang="en"] .sub-principles {
+        flex-wrap: nowrap;
+      }
+    }
+
+    /* 股市分析報告 CTA 區塊 */
+    .newsletter-cta {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+    }
+
+    .newsletter-cta-text {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .newsletter-cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 222, 128, 0.85);
+      background: radial-gradient(circle at top left, rgba(74, 222, 128, 0.35), rgba(15, 17, 21, 0.95));
+      color: #ecfdf3;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition:
+        background 0.18s ease-out,
+        transform 0.18s ease-out,
+        box-shadow 0.18s ease-out,
+        border-color 0.18s ease-out;
+      white-space: nowrap;
+    }
+
+    .newsletter-cta-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(22, 163, 74, 0.6);
+      border-color: rgba(74, 222, 128, 1);
+      background: radial-gradient(circle at top left, rgba(74, 222, 128, 0.5), rgba(15, 17, 21, 1));
+    }
+
+    .newsletter-cta-button span {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .newsletter-cta-button svg {
+      width: 13px;
+      height: 13px;
+    }
+
     .terminal {
       background: var(--card);
       border-radius: 18px;
@@ -300,42 +372,6 @@
       font-size: 13px;
       line-height: 1.5;
       transition: opacity 0.35s ease-out, transform 0.35s ease-out;
-    }
-
-    .pillars {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      margin-bottom: 48px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .card-title {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .card-body {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .tagline {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-      padding: 20px;
-      border-radius: 16px;
-      background: var(--panel);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      margin-bottom: 48px;
     }
 
     footer {
@@ -469,6 +505,11 @@
         width: 100%;
         display: block;
       }
+
+      .newsletter-cta {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -491,7 +532,32 @@
           <div class="sub-principles" id="principles"></div>
         </div>
         <p class="sub" id="subcopy"></p>
+
+        <!-- 股市分析報告 CTA 區塊 -->
+        <div class="newsletter-cta">
+          <div class="newsletter-cta-text" id="newsletter-text"></div>
+          <a
+            class="newsletter-cta-button"
+            id="newsletter-button"
+            href="https://tirosen.substack.com/?r=6xju0p&utm_campaign=pub-share-checklist"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span id="newsletter-button-label">tirosen market reports</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path
+                d="M6.25 13.75 13 7m0 0H6.75M13 7v6.25"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
       </div>
+
       <div class="terminal">
         <div class="terminal-header">
           <span class="dot"></span>
@@ -556,7 +622,11 @@
             text: "→ Vision for what a business can become."
           }
         },
-        footer: "Tokyo"
+        footer: "Tokyo",
+        newsletter: {
+          text: "",
+          button: "tirosen market reports"
+        }
       },
       ja: {
         label: "日",
@@ -579,7 +649,11 @@
             text: "→ ビジネスの未来像を描く視座。"
           }
         },
-        footer: "東京"
+        footer: "東京",
+        newsletter: {
+          text: "",
+          button: "tirosen マーケットレポート"
+        }
       },
       zh: {
         label: "中",
@@ -602,7 +676,11 @@
             text: "→ 以遠見構想企業未來。"
           }
         },
-        footer: "東京"
+        footer: "東京",
+        newsletter: {
+          text: "",
+          button: "tirosen 股市分析報告"
+        }
       }
     };
 
@@ -625,7 +703,9 @@
       langSwitch: document.getElementById("lang-switch"),
       cursorPassion: document.getElementById("cursor-passion"),
       cursorVenture: document.getElementById("cursor-venture"),
-      cursorVision: document.getElementById("cursor-vision")
+      cursorVision: document.getElementById("cursor-vision"),
+      newsletterText: document.getElementById("newsletter-text"),
+      newsletterButtonLabel: document.getElementById("newsletter-button-label")
     };
 
     const languageOrder = Object.keys(languageContent);
@@ -673,7 +753,6 @@
         { el: cmdEchoVision, cursor: cursorVision, textEl: cmdTextVision }
       ];
 
-      // 把說明文字先隱藏，之後再淡入
       commands.forEach(({ textEl }) => {
         textEl.style.opacity = 0;
         textEl.style.transform = "translateY(4px)";
@@ -681,10 +760,8 @@
 
       const fullTexts = commands.map(({ el }) => el.textContent);
 
-      // 依序顯示三行 command
       const startDelayBase = 220;
 
-      // Passion
       cursorPassion.style.display = "inline-block";
       cursorVenture.style.display = "none";
       cursorVision.style.display = "none";
@@ -695,14 +772,12 @@
         cursorPassion.style.display = "none";
         cursorVenture.style.display = "inline-block";
 
-        // Venture
         typeLine(commands[1].el, fullTexts[1], 180, () => {
           commands[1].textEl.style.opacity = 1;
           commands[1].textEl.style.transform = "translateY(0)";
           cursorVenture.style.display = "none";
           cursorVision.style.display = "inline-block";
 
-          // Vision
           typeLine(commands[2].el, fullTexts[2], 180, () => {
             commands[2].textEl.style.opacity = 1;
             commands[2].textEl.style.transform = "translateY(0)";
@@ -752,10 +827,11 @@
       elements.cmdTextVenture.textContent = data.commands.venture.text;
       elements.cmdTextVision.textContent = data.commands.vision.text;
       elements.footerLocation.textContent = data.footer;
+      elements.newsletterText.textContent = data.newsletter.text;
+      elements.newsletterButtonLabel.textContent = data.newsletter.button;
       document.body.dataset.lang = lang;
       updateLanguageButtons();
 
-      // 每次切語言時，重新跑一次終端機打字動畫
       setTimeout(animateTerminal, 250);
     }
 
