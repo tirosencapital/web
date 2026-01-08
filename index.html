@@ -345,7 +345,7 @@
       margin-top: auto;
     }
 
-    /* 進場淡入動畫 */
+    /* Fade-in animation on entry */
     .fade-in-up {
       opacity: 0;
       transform: translateY(8px);
@@ -367,7 +367,7 @@
       }
     }
 
-    /* 終端機打字 cursor */
+    /* Terminal typing cursor */
     .cursor {
       display: inline-block;
       width: 8px;
@@ -503,7 +503,7 @@
           <div class="cmd">
             <div class="cmd-title">
               <span class="prompt">tirosen@root:~$</span>
-              <span id="cmd-echo-passion">echo "Passion"</span>
+              <span id="cmd-echo-passion"></span>
               <span class="cursor" id="cursor-passion" style="display:none;"></span>
             </div>
             <p id="cmd-text-passion">→ Passion sharpens builders.</p>
@@ -511,7 +511,7 @@
           <div class="cmd">
             <div class="cmd-title">
               <span class="prompt">tirosen@root:~$</span>
-              <span id="cmd-echo-venture">echo "Venture"</span>
+              <span id="cmd-echo-venture"></span>
               <span class="cursor" id="cursor-venture" style="display:none;"></span>
             </div>
             <p id="cmd-text-venture">→ Venture into uncertainty with clarity.</p>
@@ -519,7 +519,7 @@
           <div class="cmd">
             <div class="cmd-title">
               <span class="prompt">tirosen@root:~$</span>
-              <span id="cmd-echo-vision">echo "Vision"</span>
+              <span id="cmd-echo-vision"></span>
               <span class="cursor" id="cursor-vision" style="display:none;"></span>
             </div>
             <p id="cmd-text-vision">→ Vision for what a business can become.</p>
@@ -529,7 +529,7 @@
     </section>
 
     <footer class="fade-in-up delay-2">
-      <div>© <span id="year"></span> <span id="footer-location">Tokyo</span></div>
+      <div>© <span id="year"></span> tirosen @ <span id="footer-location"></span></div>
     </footer>
   </div>
 
@@ -556,7 +556,7 @@
             text: "→ Vision for what a business can become."
           }
         },
-        footer: "Tokyo"
+        footer: "Tokyo • Singapore • Taipei"
       },
       ja: {
         label: "日",
@@ -579,7 +579,7 @@
             text: "→ ビジネスの未来像を描く視座。"
           }
         },
-        footer: "東京"
+        footer: "東京 • シンガポール • 台北"
       },
       zh: {
         label: "中",
@@ -602,7 +602,7 @@
             text: "→ 以遠見構想企業未來。"
           }
         },
-        footer: "東京"
+        footer: "東京 • 新加坡 • 台北"
       }
     };
 
@@ -629,9 +629,20 @@
     };
 
     const languageOrder = Object.keys(languageContent);
-    let currentLanguage = "en";
+    
+    function getInitialLanguage() {
+      const browserLang = navigator.language;
+      if (browserLang.startsWith("ja")) {
+        return "ja";
+      }
+      if (browserLang.startsWith("zh")) {
+        return "zh";
+      }
+      return "en";
+    }
+    let currentLanguage = getInitialLanguage();
 
-    // --- 終端機打字動畫 ---
+    // --- Terminal typing animation ---
     let typingTimeouts = [];
 
     function clearTyping() {
@@ -673,15 +684,20 @@
         { el: cmdEchoVision, cursor: cursorVision, textEl: cmdTextVision }
       ];
 
-      // 把說明文字先隱藏，之後再淡入
+      // Hide the description text first and then fade it in
       commands.forEach(({ textEl }) => {
         textEl.style.opacity = 0;
         textEl.style.transform = "translateY(4px)";
       });
+      
+      const langData = languageContent[currentLanguage];
+      const fullTexts = [
+        langData.commands.passion.echo,
+        langData.commands.venture.echo,
+        langData.commands.vision.echo
+      ];
 
-      const fullTexts = commands.map(({ el }) => el.textContent);
-
-      // 依序顯示三行 command
+      // Display three lines of commands in sequence
       const startDelayBase = 220;
 
       // Passion
@@ -712,7 +728,7 @@
       });
     }
 
-    // --- 語言切換邏輯 ---
+    // --- Language switching logic ---
     function renderPrinciples(list) {
       elements.principles.innerHTML = "";
       list.forEach((item) => {
@@ -736,6 +752,7 @@
     }
 
     function setLanguage(lang) {
+      clearTyping();
       const data = languageContent[lang];
       currentLanguage = lang;
       document.documentElement.lang = data.langAttr;
@@ -745,21 +762,28 @@
       });
       elements.subcopy.innerHTML = data.description;
       renderPrinciples(data.principles);
-      elements.cmdEchoPassion.textContent = data.commands.passion.echo;
-      elements.cmdEchoVenture.textContent = data.commands.venture.echo;
-      elements.cmdEchoVision.textContent = data.commands.vision.echo;
+
+      elements.cmdEchoPassion.textContent = "";
+      elements.cmdEchoVenture.textContent = "";
+      elements.cmdEchoVision.textContent = "";
+
       elements.cmdTextPassion.textContent = data.commands.passion.text;
       elements.cmdTextVenture.textContent = data.commands.venture.text;
       elements.cmdTextVision.textContent = data.commands.vision.text;
+      
+      elements.cmdTextPassion.style.opacity = 0;
+      elements.cmdTextVenture.style.opacity = 0;
+      elements.cmdTextVision.style.opacity = 0;
+
       elements.footerLocation.textContent = data.footer;
       document.body.dataset.lang = lang;
       updateLanguageButtons();
 
-      // 每次切語言時，重新跑一次終端機打字動畫
+      // Rerun the terminal typing animation every time the language is switched
       setTimeout(animateTerminal, 250);
     }
 
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").textContent = `2023–${new Date().getFullYear()}`;
     setLanguage(currentLanguage);
   </script>
 </body>
