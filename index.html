@@ -2,796 +2,303 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tirosen - Official</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        body {
+        /* 1. Global Settings */
+        body, html {
             margin: 0;
-            overflow: hidden; /* Hide scrollbars */
-            background-color: black;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #FDFBF7; /* Off-white */
+            font-family: 'Lato', "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
         }
-        canvas {
+
+        /* Language Switcher */
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #aaa;
+            padding: 5px;
+            transition: color 0.3s;
+            font-weight: 700;
+        }
+        .lang-btn:hover, .lang-btn.active {
+            color: #000;
+        }
+
+        /* 2. Logo (Adjusted based on image style) */
+        header {
+            padding-top: 120px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            /* Use Montserrat, this font resembles your image the most */
+            font-family: 'Montserrat', sans-serif; 
+            
+            font-size: 4.5rem; /* Desktop size */
+            font-weight: 700;  /* Bold, matches the weight of the image */
+            letter-spacing: 0.15em; /* Widen letter spacing, key to premium feel */
+            color: #000000;         /* Pure black */
+            text-transform: lowercase; /* All lowercase */
             display: block;
         }
-        /* Logo Styles */
-        .logo {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            color: #aaddff;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            text-shadow: 0 0 8px rgba(100, 200, 255, 0.8);
-            pointer-events: none;
-            opacity: 0.9;
-            animation: glitch-skew 5s infinite linear alternate-reverse;
-        }
-        /* Glitch Effect */
-        .logo::before,
-        .logo::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black; /* Mask original text with black background */
-            clip-path: inset(0 0 0 0);
-        }
-        .logo::before {
-            left: -2px;
-            text-shadow: 2px 0 #ff00c1;
-            animation: glitch-anim-1 5s infinite linear alternate-reverse;
-        }
-        .logo::after {
-            left: 2px;
-            text-shadow: -2px 0 #00fff9;
-            animation: glitch-anim-2 5s infinite linear alternate-reverse;
-        }
 
-        /* Define occasional glitch animation (mostly static) */
-        @keyframes glitch-anim-1 {
-            0% { clip-path: inset(80% 0 20% 0); transform: translate(-2px, 1px); }
-            2% { clip-path: inset(10% 0 50% 0); transform: translate(2px, -1px); }
-            4% { clip-path: inset(40% 0 10% 0); transform: translate(-2px, 2px); }
-            6%, 100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-        }
-        @keyframes glitch-anim-2 {
-            0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
-            2% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
-            4% { clip-path: inset(30% 0 20% 0); transform: translate(2px, 1px); }
-            6%, 100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-        }
-        @keyframes glitch-skew {
-            0% { transform: translateX(-50%) skew(0deg); }
-            2% { transform: translateX(-50%) skew(-2deg); }
-            4% { transform: translateX(-50%) skew(2deg); }
-            6%, 100% { transform: translateX(-50%) skew(0deg); }
-        }
-        /* Top-right tagline styles */
-        .hud-top-right {
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            z-index: 2;
-            text-align: right;
-            font-family: "Courier New", Courier, monospace;
-            pointer-events: none;
-        }
-        .status-line {
-            color: #aaddff;
-            font-size: 12px;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            opacity: 0.8;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 6px;
-        }
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background-color: #4ade80;
-            border-radius: 50%;
-            box-shadow: 0 0 5px #4ade80;
-            animation: blink-status 2s infinite;
-        }
-        .tagline {
-            color: rgba(170, 221, 255, 0.7);
-            font-family: "Courier New", Courier, monospace;
-            font-size: 16px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 5px rgba(100, 200, 255, 0.5);
-            pointer-events: none;
-        }
-        /* Top-left Panel Styles */
-        .hud-top-left {
-            position: absolute;
-            top: 40px;
-            left: 40px;
-            z-index: 2;
-            font-family: "Courier New", Courier, monospace;
-            pointer-events: auto;
-        }
-        .lang-switch {
-            color: #aaddff;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 0 0 5px rgba(100, 200, 255, 0.6);
-        }
-        .lang-switch span {
-            cursor: pointer;
-            opacity: 0.6;
-            transition: opacity 0.3s;
-        }
-        .lang-switch span.active, .lang-switch span:hover {
-            opacity: 1;
-            text-shadow: 0 0 8px #aaddff;
-        }
-        .copyright {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            font-family: "Courier New", Courier, monospace;
-            color: rgba(170, 221, 255, 0.6);
-            font-size: 12px;
-            letter-spacing: 1px;
-            pointer-events: none;
-        }
-        /* Helmet/Visor overlay effects */
-        .visor-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            pointer-events: none;
-            
-            /* Simulate helmet: Scanlines + Cyan tint + Heavy vignette */
-            background: 
-                /* 1. Scanlines */
-                linear-gradient(
-                    to bottom,
-                    rgba(255,255,255,0),
-                    rgba(255,255,255,0) 50%,
-                    rgba(0,0,0,0.4) 50%,
-                    rgba(0,0,0,0.4)
-                ),
-                /* 2. Screen Glow */
-                radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%),
-                /* 3. Heavy Vignette */
-                radial-gradient(
-                    circle at center,
-                    transparent 50%,
-                    rgba(0, 15, 30, 0.8) 90%,
-                    black 130%
-                );
-            background-size: 100% 3px, 100% 100%, 100% 100%;
-            
-            /* Inner shadow for border thickness */
-            box-shadow: inset 0 0 120px rgba(0,0,0,0.9);
-            
-            /* Slight flicker animation for unstable signal realism */
-            animation: flicker 0.1s infinite;
-        }
-
-        @keyframes flicker {
-            0% { opacity: 0.97; }
-            50% { opacity: 0.94; }
-            100% { opacity: 0.97; }
-        }
-
-        /* HUD Panel Styles */
-        .hud-panel {
-            position: absolute;
-            bottom: 40px;
-            left: 40px;
-            z-index: 2;
+        /* 3. Middle Area */
+        main {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            font-family: "Courier New", Courier, monospace;
-            pointer-events: none;
-        }
-        
-        .hud-row {
-            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 12px;
-            opacity: 0.85;
+            padding-bottom: 20px;
+            width: 100%;
         }
 
-        /* Dynamic Status Light (Square pixel) */
-        .hud-status {
-            width: 6px;
-            height: 6px;
-            background-color: #aaddff;
-            box-shadow: 0 0 8px #aaddff;
-            animation: blink-status 3s infinite;
-        }
-        
-        /* Stagger blink animation for randomness */
-        .hud-row:nth-child(2) .hud-status { animation-delay: 0.3s; background-color: #4ade80; box-shadow: 0 0 8px #4ade80; }
-        .hud-row:nth-child(3) .hud-status { animation-delay: 0.6s; background-color: #f87171; box-shadow: 0 0 8px #f87171; }
-
-        .hud-content {
-            border-left: 2px solid rgba(170, 221, 255, 0.3);
-            padding-left: 12px;
-            background: linear-gradient(90deg, rgba(0, 20, 40, 0.6) 0%, transparent 100%);
-            padding-right: 20px;
+        .vision-container {
+            position: relative;
+            padding: 30px 10px;
+            margin-bottom: 40px; 
+            text-align: center;
         }
 
-        .hud-title {
-            color: #aaddff;
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-shadow: 0 0 5px rgba(100, 200, 255, 0.6);
-            margin-bottom: 4px;
-        }
-
-        .hud-desc {
-            color: rgba(170, 221, 255, 0.7);
-            font-size: 14px;
-            letter-spacing: 0.5px;
-        }
-
-        @keyframes blink-status {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
-        }
-
-        /* Typewriter cursor effect */
-        .typing::after {
-            content: '_';
-            animation: blink-cursor 0.8s infinite;
-        }
-        @keyframes blink-cursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* Bottom-right Data Panel */
-        .hud-panel-right {
-            position: absolute;
-            bottom: 40px;
-            right: 40px;
+        .core-text {
+            /* Switch back to a more modern sans-serif here, matches Logo better */
+            font-family: 'Lato', sans-serif; 
+            font-size: 2rem;
+            font-weight: 400; 
+            color: #1a1a1a;
+            position: relative;
             z-index: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-family: "Courier New", Courier, monospace;
-            pointer-events: none;
-            text-align: right;
-            
-            border-right: 2px solid rgba(170, 221, 255, 0.3);
-            padding-right: 12px;
-            background: linear-gradient(270deg, rgba(0, 20, 40, 0.6) 0%, transparent 100%);
+            font-style: italic; /* Keep italic for dynamism */
+            letter-spacing: 1px;
+            white-space: nowrap;
         }
 
-        .metric-row {
+        /* SVG Settings */
+        .circle-svg {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 130%;
+            height: 200%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        path {
+            fill: none;
+            stroke: #003366; /* Navy Blue */
+            stroke-width: 2.5; /* Since Logo is bolder, stroke can be slightly stronger too */
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1500;
+            stroke-dashoffset: 1500;
+            animation: drawComplex 2.2s cubic-bezier(0.37, 0, 0.63, 1) forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes drawComplex {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* 4. Mindset Text */
+        .mindset-container {
             display: flex;
-            justify-content: flex-end;
             align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
             gap: 15px;
-            font-size: 16px;
-            color: rgba(170, 221, 255, 0.8);
+            padding: 0 20px;
         }
 
-        .metric-label {
-            color: #aaddff;
-            font-weight: bold;
+        .mindset-item {
+            font-family: 'Lato', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700; /* Slightly bolder to echo the Logo */
             text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 5px rgba(100, 200, 255, 0.6);
-        }
-
-        .metric-value {
-            font-variant-numeric: tabular-nums;
-            color: #fff;
-            min-width: 80px;
-            text-align: right;
-        }
-
-        /* Text Transition Styles */
-        .tagline, .hud-title, .hud-desc, .metric-label {
-            transition: opacity 0.3s ease;
-        }
-        .text-fade-out {
-            opacity: 0 !important;
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .logo { font-size: 28px; }
-            .status-line { font-size: 12px; }
-            .tagline { font-size: 14px; }
-            .lang-switch { font-size: 16px; }
-            .copyright { font-size: 10px; }
-            .hud-title { font-size: 14px; }
-            .hud-desc { font-size: 10px; max-width: 130px; }
-            .metric-row { font-size: 12px; gap: 8px; }
+            letter-spacing: 0.25em;
+            color: #555;
             
-            /* Adjust positioning for mobile */
-            .hud-top-right { top: 70px; right: 10px; }
-            .hud-top-left { top: 70px; left: 10px; }
-            .hud-panel { bottom: 40px; left: 10px; }
-            .hud-panel-right { bottom: 40px; right: 10px; }
+            opacity: 0;
+            transform: translateY(15px);
+            animation: floatUp 0.8s ease-out forwards;
+        }
+
+        .separator {
+            color: #003366;
+            font-size: 0.6rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            display: inline-block;
+        }
+
+        /* Animation Delay */
+        .mindset-item:nth-child(1) { animation-delay: 2.5s; }
+        .separator:nth-child(2)    { animation-delay: 2.6s; }
+        .mindset-item:nth-child(3) { animation-delay: 2.7s; }
+        .separator:nth-child(4)    { animation-delay: 2.8s; }
+        .mindset-item:nth-child(5) { animation-delay: 2.9s; }
+        .separator:nth-child(6)    { animation-delay: 3.0s; }
+        .mindset-item:nth-child(7) { animation-delay: 3.1s; }
+
+        @keyframes floatUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 0.6; } }
+
+        footer {
+            padding-bottom: 20px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #bbb;
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+
+        /* --- Mobile Adaptation --- */
+        @media (max-width: 768px) {
+            .logo { 
+                /* Letter spacing too wide on mobile causes wrapping, so reduce slightly */
+                font-size: 3rem; 
+                letter-spacing: 0.1em; 
+            }
+            
+            .core-text { 
+                font-size: 6vw; 
+            }
+            
+            .circle-svg {
+                width: 125%;
+            }
+
+            .mindset-container {
+                flex-direction: row;
+                gap: 8px;
+                margin-top: 20px;
+            }
+
+            .separator {
+                display: inline-block;
+                margin: 0 2px;
+            }
+
+            .mindset-item {
+                font-size: 0.7rem;
+                letter-spacing: 0.15em;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="logo" data-text="tirosen">tirosen</div>
-
-<div class="hud-top-right">
-    <div class="status-line"><span class="status-dot"></span>SYSTEM ONLINE</div>
-    <div class="tagline" data-text="#Dream. Dare. Disrupt."></div>
-</div>
-
-<!-- Top-left Info Panel -->
-<div class="hud-top-left">
     <div class="lang-switch">
-        <span class="lang-btn active" data-lang="en">EN</span> / <span class="lang-btn" data-lang="jp">JP</span> / <span class="lang-btn" data-lang="zh">ZH</span>
+        <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
+        <button class="lang-btn" onclick="setLang('jp')" data-lang="jp">日</button>
+        <button class="lang-btn" onclick="setLang('zh')" data-lang="zh">中</button>
     </div>
-</div>
 
-<div class="copyright">© <span id="currYear"></span> tirosen</div>
+    <header>
+        <div class="logo">tirosen</div>
+    </header>
 
-<!-- Bottom-left HUD Panel -->
-<div class="hud-panel">
-    <div class="hud-row">
-        <div class="hud-status"></div>
-        <div class="hud-content">
-            <div class="hud-title" data-text="Passion"></div>
-            <div class="hud-desc" data-text="Passion sharpens builders."></div>
+    <main>
+        <div class="vision-container">
+            <div class="core-text" id="core-text">Passion, Venture, Vision.</div>
+            <svg class="circle-svg" viewBox="0 0 350 120">
+                <path d="M 10,95 
+                         Q 150,115 330,90
+                         Q 350,85 340,60
+                         Q 320,10 175,10
+                         Q 40,10 20,50
+                         Q 15,90 320,85" />
+            </svg>
         </div>
-    </div>
-    <div class="hud-row">
-        <div class="hud-status"></div>
-        <div class="hud-content">
-            <div class="hud-title" data-text="Venture"></div>
-            <div class="hud-desc" data-text="Venture into uncertainty with clarity."></div>
+
+        <div class="mindset-container">
+            <span class="mindset-item" id="m-time">Time</span>
+            <span class="separator">◆</span>
+            <span class="mindset-item" id="m-patience">Patience</span>
+            <span class="separator">◆</span>
+            <span class="mindset-item" id="m-discipline">Discipline</span>
+            <span class="separator">◆</span>
+            <span class="mindset-item" id="m-compounding">Compounding</span>
         </div>
-    </div>
-    <div class="hud-row">
-        <div class="hud-status"></div>
-        <div class="hud-content">
-            <div class="hud-title" data-text="Vision"></div>
-            <div class="hud-desc" data-text="Vision for what a business can become."></div>
-        </div>
-    </div>
-</div>
+    </main>
 
-<!-- Bottom-right Data Panel -->
-<div class="hud-panel-right">
-    <div class="metric-row">
-        <span class="metric-label">Time</span>
-        <span class="metric-value" id="val-time">00:00:00</span>
-    </div>
-    <div class="metric-row">
-        <span class="metric-label">Patience</span>
-        <span class="metric-value" id="val-patience">0.000</span>
-    </div>
-    <div class="metric-row">
-        <span class="metric-label">Discipline</span>
-        <span class="metric-value" id="val-discipline">100%</span>
-    </div>
-    <div class="metric-row">
-        <span class="metric-label">Compounding</span>
-        <span class="metric-value" id="val-compounding">x1.000</span>
-    </div>
-</div>
+    <footer>
+        &copy; <span id="year"></span> tirosen. <span id="footer-rights">All Rights Reserved.</span>
+    </footer>
 
-<div class="visor-overlay"></div>
-<canvas id="warpCanvas"></canvas>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
 
-<script>
-    const canvas = document.getElementById('warpCanvas');
-    const ctx = canvas.getContext('2d');
-
-    let width, height;
-    let stars = [];
-    let shootingStars = [];
-    const numStars = 500; // Number of stars
-    let speed = 1;       // Current flight speed
-    let mouseX = 0;      // Mouse X offset (relative to center)
-    let mouseY = 0;      // Mouse Y offset (relative to center)
-
-    // Bottom-right panel elements
-    const valTime = document.getElementById('val-time');
-    const valPatience = document.getElementById('val-patience');
-    const valDiscipline = document.getElementById('val-discipline');
-    const valCompounding = document.getElementById('val-compounding');
-    let startTime = Date.now();
-    let compoundingVal = 1.0;
-
-    // Set Copyright Year
-    document.getElementById('currYear').textContent = new Date().getFullYear();
-
-    // Initialize canvas size
-    function resize() {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-        // Translate origin to center
-        ctx.translate(width / 2, height / 2);
-    }
-    
-    // Star object
-    class Star {
-        constructor() {
-            this.init();
-        }
-
-        init() {
-            // Random distribution in space
-            this.x = (Math.random() - 0.5) * width * 2;
-            this.y = (Math.random() - 0.5) * height * 2;
-            this.z = Math.random() * width; // Depth
-            this.pz = this.z; // Record previous position for trail effect
-            
-            // Randomly assign star color (White, Blue, Red, Purple)
-            const colors = [
-                "255, 255, 255", // 白
-                "100, 200, 255", // 藍
-                "255, 100, 100", // 紅
-                "200, 200, 255"  // 紫
-            ];
-            this.color = colors[Math.floor(Math.random() * colors.length)];
-
-            // Random size to simulate different celestial bodies (0.5 to 5.5)
-            this.size = Math.random() * 5 + 0.5;
-        }
-
-        update() {
-            // Move star towards screen (Decrease Z)
-            this.z -= speed;
-            
-            // Boundary loop: Ensure stars don't all leave screen
-            // Range set to 1.5x width
-            const limitX = width * 1.5;
-            const limitY = height * 1.5;
-            if (this.x < -limitX) this.x += limitX * 2;
-            if (this.x > limitX) this.x -= limitX * 2;
-            if (this.y < -limitY) this.y += limitY * 2;
-            if (this.y > limitY) this.y -= limitY * 2;
-
-            // If star passes screen, reset to far distance
-            if (this.z < 1) {
-                this.init();
-                this.z = width;
-                this.pz = this.z;
+        const i18n = {
+            en: {
+                core: "Passion, Venture, Vision.",
+                time: "Time",
+                patience: "Patience",
+                discipline: "Discipline",
+                compounding: "Compounding",
+                rights: "All Rights Reserved."
+            },
+            jp: {
+                core: "情熱、ベンチャー、ビジョン。",
+                time: "時間",
+                patience: "忍耐",
+                discipline: "規律",
+                compounding: "複利",
+                rights: "All Rights Reserved."
+            },
+            zh: {
+                core: "熱情、冒險、遠見。",
+                time: "時間",
+                patience: "耐心",
+                discipline: "紀律",
+                compounding: "複利",
+                rights: "版權所有"
             }
-        }
-
-        draw() {
-            // Calculate perspective coordinates
-            const sx = (this.x / this.z) * 100;
-            const sy = (this.y / this.z) * 100;
-
-            // Calculate previous frame coordinates for lines
-            const px = (this.x / this.pz) * 100;
-            const py = (this.y / this.pz) * 100;
-
-            this.pz = this.z; // Update previous position
-
-            // Start drawing
-            ctx.beginPath();
-            ctx.moveTo(px, py); // Line start
-            ctx.lineTo(sx, sy); // Line end
-            
-            // Adjust opacity and width based on distance
-            const alpha = 1 - this.z / width;
-            ctx.strokeStyle = `rgba(${this.color}, ${alpha})`;
-            ctx.lineWidth = alpha * this.size; 
-            ctx.stroke();
-        }
-    }
-
-    // Shooting Star object
-    class ShootingStar {
-        constructor() {
-            this.reset();
-        }
-
-        reset() {
-            this.x = (Math.random() - 0.5) * width;
-            this.y = (Math.random() - 0.5) * height;
-            // Fast random velocity
-            this.vx = (Math.random() - 0.5) * 5; 
-            this.vy = (Math.random() - 0.5) * 5;
-            // Ensure minimum speed for visual effect
-            if (Math.abs(this.vx) < 1) this.vx = 2 * (Math.random() < 0.5 ? 1 : -1);
-            
-            this.life = 1.0;
-            this.active = true;
-        }
-
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            this.life -= 0.005; // Fade out speed
-            
-            if (this.life <= 0) {
-                this.active = false;
-            }
-        }
-
-        draw() {
-            if (!this.active) return;
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x - this.vx * 8, this.y - this.vy * 8); // Trail
-            ctx.strokeStyle = `rgba(220, 240, 255, ${this.life})`;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        }
-    }
-
-    // Initialize all stars
-    function initStars() {
-        stars = [];
-        for (let i = 0; i < numStars; i++) {
-            stars.push(new Star());
-        }
-    }
-
-    // Animation loop
-    function animate() {
-        // Black background (with transparency for trails if needed)
-        ctx.fillStyle = "black";
-        ctx.fillRect(-width/2, -height/2, width, height);
-
-        stars.forEach(star => {
-            star.update();
-            star.draw();
-        });
-
-        // Handle Shooting Stars
-        if (Math.random() < 0.0005) { // 0.05% chance per frame
-            shootingStars.push(new ShootingStar());
-        }
-        
-        shootingStars.forEach((ss, index) => {
-            ss.update();
-            ss.draw();
-            if (!ss.active) shootingStars.splice(index, 1);
-        });
-
-        // Update bottom-right data
-        let now = Date.now();
-        let diff = now - startTime;
-        
-        // Time: Display mm:ss:ms
-        let ms = Math.floor((diff % 1000) / 10);
-        let s = Math.floor((diff / 1000) % 60);
-        let m = Math.floor((diff / (1000 * 60)) % 60);
-        valTime.textContent = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s) + ":" + (ms < 10 ? "0" + ms : ms);
-
-        // Patience: Oscillating value representing mental stability
-        valPatience.textContent = (95 + Math.sin(now / 2000) * 4).toFixed(2) + "%";
-
-        // Discipline: Simulate system stability
-        valDiscipline.textContent = (99 + Math.random() * 1).toFixed(2) + "%";
-
-        // Compounding: Simulate rate/multiplier
-        compoundingVal = 1.0 + (diff / 50000); // Gradual increase over time
-        valCompounding.textContent = "x" + compoundingVal.toFixed(3);
-
-        requestAnimationFrame(animate);
-    }
-
-    window.addEventListener('resize', () => {
-        resize();
-        initStars();
-    });
-
-    resize();
-    initStars();
-    animate();
-
-    let activeTypingTimers = [];
-
-    // HUD Typewriter Effect Logic
-    async function typeWriterEffect() {
-        const rows = document.querySelectorAll('.hud-row');
-        
-        // Helper: Display character by character
-        const typeText = (element, text, speed) => {
-            return new Promise(resolve => {
-                // Clear previous content if starting fresh typing
-                element.textContent = "";
-                element.classList.add('typing'); // Add cursor
-                let i = 0;
-                const timer = setInterval(() => {
-                    // Safety check: if element no longer has typing class (cleared), stop
-                    if (!element.classList.contains('typing')) {
-                        clearInterval(timer);
-                        return;
-                    }
-                    element.textContent += text.charAt(i);
-                    i++;
-                    if (i >= text.length) {
-                        clearInterval(timer);
-                        element.classList.remove('typing'); // Remove cursor
-                        resolve();
-                    }
-                }, speed);
-                activeTypingTimers.push(timer);
-            });
         };
 
-        for (const row of rows) {
-            const title = row.querySelector('.hud-title');
-            const desc = row.querySelector('.hud-desc');
+        function setLang(lang) {
+            const t = i18n[lang];
+            document.getElementById('core-text').innerText = t.core;
+            document.getElementById('m-time').innerText = t.time;
+            document.getElementById('m-patience').innerText = t.patience;
+            document.getElementById('m-discipline').innerText = t.discipline;
+            document.getElementById('m-compounding').innerText = t.compounding;
+            document.getElementById('footer-rights').innerText = t.rights;
             
-            // Type title first, then description
-            await typeText(title, title.getAttribute('data-text'), 100);
-            await typeText(desc, desc.getAttribute('data-text'), 30);
-            
-            // Pause between rows
-            await new Promise(r => setTimeout(r, 500));
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            // Update html lang attribute
+            document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : lang;
         }
-
-        // Type top-right tagline after bottom-left finishes
-        const tagline = document.querySelector('.tagline');
-        if (tagline) {
-            await new Promise(r => setTimeout(r, 500));
-            await typeText(tagline, tagline.getAttribute('data-text'), 100);
-        }
-    }
-
-    function clearTypingEffects() {
-        // Clear all active intervals
-        activeTypingTimers.forEach(timer => clearInterval(timer));
-        activeTypingTimers = [];
-        // Remove cursor styles
-        document.querySelectorAll('.typing').forEach(el => el.classList.remove('typing'));
-    }
-
-    // Start typewriter effect
-    setTimeout(typeWriterEffect, 1000);
-
-    // Language Switching Logic
-    const translations = {
-        en: {
-            tagline: "#Dream. Dare. Disrupt.",
-            hud: [
-                { title: "Passion", desc: "Passion sharpens builders." },
-                { title: "Venture", desc: "Venture into uncertainty with clarity." },
-                { title: "Vision", desc: "Vision for what a business can become." }
-            ],
-            metrics: ["Time", "Patience", "Discipline", "Compounding"]
-        },
-        jp: {
-            tagline: "#夢見て。挑戦し。変革する。",
-            hud: [
-                { title: "情熱", desc: "情熱がものづくりを磨く。" },
-                { title: "ベンチャー", desc: "不確実性へ明瞭さをもって踏み出すベンチャー精神。" },
-                { title: "ビジョン", desc: "ビジネスの未来像を描く視座。" }
-            ],
-            metrics: ["時間", "忍耐", "規律", "複利"]
-        },
-        zh: {
-            tagline: "#夢想．挑戰．顛覆。",
-            hud: [
-                { title: "熱情", desc: "熱情讓人做得更好。" },
-                { title: "冒險", desc: "以清晰的思路面對不確定性。" },
-                { title: "遠見", desc: "以遠見構想企業未來。" }
-            ],
-            metrics: ["時間", "耐心", "紀律", "複利"]
-        }
-    };
-
-    const langBtns = document.querySelectorAll('.lang-btn');
-    const hudRows = document.querySelectorAll('.hud-row');
-    const metricLabels = document.querySelectorAll('.metric-label');
-    const taglineEl = document.querySelector('.tagline');
-
-    // Auto-detect browser language
-    const browserLang = navigator.language || navigator.userLanguage || 'en';
-    let autoLang = 'en';
-    if (browserLang.startsWith('zh')) {
-        autoLang = 'zh';
-    } else if (browserLang.startsWith('ja')) {
-        autoLang = 'jp';
-    }
-
-    // Apply detected language if not default 'en'
-    if (autoLang !== 'en') {
-        const data = translations[autoLang];
-        
-        // Update active button
-        langBtns.forEach(btn => {
-            btn.classList.toggle('active', btn.getAttribute('data-lang') === autoLang);
-        });
-
-        // Update text data for typewriter and static labels
-        taglineEl.setAttribute('data-text', data.tagline);
-        hudRows.forEach((row, i) => {
-            if (data.hud[i]) {
-                row.querySelector('.hud-title').setAttribute('data-text', data.hud[i].title);
-                row.querySelector('.hud-desc').setAttribute('data-text', data.hud[i].desc);
-            }
-        });
-        metricLabels.forEach((label, i) => {
-            if (data.metrics[i]) label.textContent = data.metrics[i];
-        });
-    }
-
-    langBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (btn.classList.contains('active')) return;
-
-            // Update active state
-            langBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            // Stop any ongoing typewriter effects to prevent bug
-            clearTypingEffects();
-
-            const lang = btn.getAttribute('data-lang');
-            const data = translations[lang];
-            
-            // Elements to animate
-            const animElements = [
-                taglineEl,
-                ...document.querySelectorAll('.hud-title'),
-                ...document.querySelectorAll('.hud-desc'),
-                ...document.querySelectorAll('.metric-label')
-            ];
-
-            // 1. Fade Out
-            animElements.forEach(el => el.classList.add('text-fade-out'));
-
-            // 2. Wait for transition, then update text and Fade In
-            setTimeout(() => {
-                // Update Tagline
-                taglineEl.textContent = data.tagline;
-                taglineEl.setAttribute('data-text', data.tagline);
-
-                // Update HUD Content
-                hudRows.forEach((row, index) => {
-                    if (data.hud[index]) {
-                        const title = row.querySelector('.hud-title');
-                        const desc = row.querySelector('.hud-desc');
-                        title.textContent = data.hud[index].title;
-                        title.setAttribute('data-text', data.hud[index].title);
-                        desc.textContent = data.hud[index].desc;
-                        desc.setAttribute('data-text', data.hud[index].desc);
-                    }
-                });
-
-                // Update Metrics Labels
-                metricLabels.forEach((label, index) => {
-                    if (data.metrics[index]) {
-                        label.textContent = data.metrics[index];
-                    }
-                });
-
-                // Reset Metrics (System Restart Effect)
-                startTime = Date.now();
-                compoundingVal = 1.0;
-
-                // 3. Fade In
-                animElements.forEach(el => el.classList.remove('text-fade-out'));
-            }, 300);
-        });
-    });
-
-</script>
+    </script>
 
 </body>
 </html>
