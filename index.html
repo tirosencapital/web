@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tirosen - Official</title>
+    <title>tirosen</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -105,8 +105,8 @@
             top: 55%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 130%;
-            height: 200%;
+        width: 160%;
+        height: 250%;
             z-index: 1;
             pointer-events: none;
             overflow: visible;
@@ -120,8 +120,11 @@
             stroke-linejoin: round;
             stroke-dasharray: 1500;
             stroke-dashoffset: 1500;
-            animation: drawComplex 2.2s cubic-bezier(0.37, 0, 0.63, 1) forwards;
-            animation-delay: 0.5s;
+    }
+
+    path.active {
+        animation: drawComplex 2.2s cubic-bezier(0.37, 0, 0.63, 1) forwards;
+        animation-delay: 0.5s;
         }
 
         @keyframes drawComplex {
@@ -235,7 +238,7 @@
                          Q 350,85 340,60
                          Q 320,10 175,10
                          Q 40,10 20,50
-                         Q 15,90 320,85" />
+                     Q 15,90 320,85" class="active" />
             </svg>
         </div>
 
@@ -272,7 +275,7 @@
                 patience: "忍耐",
                 discipline: "規律",
                 compounding: "複利",
-                rights: "All Rights Reserved."
+                rights: "全著作権所有"
             },
             zh: {
                 core: "熱情、冒險、遠見。",
@@ -299,6 +302,28 @@
 
             // Update html lang attribute
             document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : lang;
+
+            // Replay SVG animation
+            const path = document.querySelector('.circle-svg path');
+            if (path) {
+                path.classList.remove('active');
+                void path.getBoundingClientRect(); /* trigger reflow for SVG */
+                path.classList.add('active');
+            }
+
+            // Replay Mindset animations
+            const mindsetItems = document.querySelectorAll('.mindset-item, .separator');
+            mindsetItems.forEach(el => el.style.animation = 'none');
+            document.body.offsetHeight; /* trigger reflow */
+            mindsetItems.forEach(el => el.style.animation = '');
+        }
+
+        // Auto-detect browser language
+        const browserLang = navigator.language || navigator.userLanguage || 'en';
+        if (browserLang.toLowerCase().startsWith('ja')) {
+            setLang('jp');
+        } else if (browserLang.toLowerCase().startsWith('zh')) {
+            setLang('zh');
         }
     </script>
 
