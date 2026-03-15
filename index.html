@@ -80,7 +80,7 @@
         .vision-container {
             position: relative;
             padding: 30px 10px;
-            margin-bottom: 40px; 
+            margin-bottom: 60px; /* Increase bottom margin to prevent SVG lines from overlapping text below */
             text-align: center;
             width: fit-content;
             max-width: 90%;
@@ -112,7 +112,8 @@
             overflow: visible;
         }
 
-        path {
+        /* Restrict animation styles to the path within circle-svg */
+        .circle-svg path {
             fill: none;
             stroke: #003366; /* Navy Blue */
             stroke-width: 2.5; /* Since Logo is bolder, stroke can be slightly stronger too */
@@ -122,7 +123,7 @@
             stroke-dashoffset: 1500;
     }
 
-    path.active {
+        .circle-svg path.active {
         animation: drawComplex 2.2s cubic-bezier(0.37, 0, 0.63, 1) forwards;
         animation-delay: 0.5s;
         }
@@ -139,6 +140,8 @@
             flex-wrap: wrap;
             gap: 15px;
             padding: 0 20px;
+            position: relative;
+            z-index: 10; /* Increase z-index to ensure text always stays on top of the drawing effect */
         }
 
         .mindset-item {
@@ -190,7 +193,7 @@
                 font-size: 3rem; 
                 letter-spacing: 0.1em; 
             }
-            
+
             .core-text { 
                 font-size: 4.8vw; 
             }
