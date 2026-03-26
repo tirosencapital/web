@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tirosen</title>
-    
+    <meta name="description" content="Passion, Venture, Vision. — Time, Patience, Discipline, Compounding.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
@@ -52,6 +53,10 @@
             padding-top: 120px;
             text-align: center;
             flex-shrink: 0;
+        }
+
+        h1.logo {
+            margin: 0;
         }
 
         .logo {
@@ -105,8 +110,8 @@
             top: 55%;
             left: 50%;
             transform: translate(-50%, -50%);
-        width: 160%;
-        height: 250%;
+            width: 160%;
+            height: 250%;
             z-index: 1;
             pointer-events: none;
             overflow: visible;
@@ -194,8 +199,9 @@
                 letter-spacing: 0.1em; 
             }
 
-            .core-text { 
-                font-size: 4.8vw; 
+            .core-text {
+                font-size: 4.8vw;
+                white-space: normal;
             }
             
             .circle-svg {
@@ -223,19 +229,19 @@
 <body>
 
     <div class="lang-switch">
-        <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
-        <button class="lang-btn" onclick="setLang('jp')" data-lang="jp">日</button>
-        <button class="lang-btn" onclick="setLang('zh')" data-lang="zh">中</button>
+        <button class="lang-btn active" onclick="setLang('en')" data-lang="en" aria-pressed="true">EN</button>
+        <button class="lang-btn" onclick="setLang('jp')" data-lang="jp" aria-pressed="false">日</button>
+        <button class="lang-btn" onclick="setLang('zh')" data-lang="zh" aria-pressed="false">中</button>
     </div>
 
     <header>
-        <div class="logo">tirosen</div>
+        <h1 class="logo">tirosen</h1>
     </header>
 
     <main>
         <div class="vision-container">
             <div class="core-text" id="core-text">Passion, Venture, Vision.</div>
-            <svg class="circle-svg" viewBox="0 0 350 120">
+            <svg class="circle-svg" viewBox="0 0 350 120" aria-hidden="true">
                 <path d="M 10,95 
                          Q 150,115 330,90
                          Q 350,85 340,60
@@ -292,15 +298,17 @@
 
         function setLang(lang) {
             const t = i18n[lang];
-            document.getElementById('core-text').innerText = t.core;
-            document.getElementById('m-time').innerText = t.time;
-            document.getElementById('m-patience').innerText = t.patience;
-            document.getElementById('m-discipline').innerText = t.discipline;
-            document.getElementById('m-compounding').innerText = t.compounding;
-            document.getElementById('footer-rights').innerText = t.rights;
-            
+            document.getElementById('core-text').textContent = t.core;
+            document.getElementById('m-time').textContent = t.time;
+            document.getElementById('m-patience').textContent = t.patience;
+            document.getElementById('m-discipline').textContent = t.discipline;
+            document.getElementById('m-compounding').textContent = t.compounding;
+            document.getElementById('footer-rights').textContent = t.rights;
+
             document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.lang === lang);
+                const isActive = btn.dataset.lang === lang;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
             });
 
             // Update html lang attribute
@@ -310,19 +318,21 @@
             const path = document.querySelector('.circle-svg path');
             if (path) {
                 path.classList.remove('active');
-                void path.getBoundingClientRect(); /* trigger reflow for SVG */
+                void path.getBoundingClientRect();
                 path.classList.add('active');
             }
 
             // Replay Mindset animations
             const mindsetItems = document.querySelectorAll('.mindset-item, .separator');
-            mindsetItems.forEach(el => el.style.animation = 'none');
-            document.body.offsetHeight; /* trigger reflow */
-            mindsetItems.forEach(el => el.style.animation = '');
+            mindsetItems.forEach(el => {
+                el.style.animation = 'none';
+                void el.offsetWidth;
+                el.style.animation = '';
+            });
         }
 
         // Auto-detect browser language
-        const browserLang = navigator.language || navigator.userLanguage || 'en';
+        const browserLang = navigator.language || 'en';
         if (browserLang.toLowerCase().startsWith('ja')) {
             setLang('jp');
         } else if (browserLang.toLowerCase().startsWith('zh')) {
